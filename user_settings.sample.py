@@ -38,4 +38,7 @@ user_settings = {
 
     #Disable futex-based in-process synchronization primitives
 #    "PROTON_NO_FSYNC": "1",
+
+    #Disable Gallium Nine
+#    "PROTON_NO_GALLIUM_NINE": "1",
 }
