@@ -657,6 +657,7 @@ class CompatData:
             use_dxvk_dxgi = not use_wined3d and \
                     not ("WINEDLLOVERRIDES" in g_session.env and "dxgi=b" in g_session.env["WINEDLLOVERRIDES"])
             use_nvapi = 'enablenvapi' in g_session.compat_config
+            no_galliumnine = "nogalliumnine" in g_session.compat_config
 
             builtin_dll_copy = os.environ.get("PROTON_DLL_COPY",
                     #dxsetup redist
@@ -700,6 +701,7 @@ class CompatData:
                 getmtimestr(g_proton.default_pfx_dir, 'system.reg'),
                 str(use_wined3d),
                 str(use_dxvk_dxgi),
+                str(no_galliumnine),
                 builtin_dll_copy,
                 str(use_nvapi),
             ))
@@ -777,10 +779,14 @@ class CompatData:
 
             if use_wined3d:
                 dxvkfiles = ["dxvk_config"]
-                wined3dfiles = ["d3d11", "d3d10", "d3d10core", "d3d10_1", "d3d9"]
+                wined3dfiles = ["d3d11", "d3d10", "d3d10core", "d3d10_1"]
+                if no_galliumnine:
+                    wined3dfiles.append("d3d9")
             else:
-                dxvkfiles = ["dxvk_config", "d3d11", "d3d10", "d3d10core", "d3d10_1", "d3d9"]
+                dxvkfiles = ["dxvk_config", "d3d11", "d3d10", "d3d10core", "d3d10_1"]
                 wined3dfiles = []
+                if no_galliumnine:
+                    dxvkfiles.append("d3d9")
 
             if use_dxvk_dxgi:
                 dxvkfiles.append("dxgi")
@@ -826,6 +832,12 @@ class CompatData:
                     try_copy(nvidia_wine_dll_dir + "/" + dll,
                              self.prefix_dir + "drive_c/windows/system32/" + dll,
                              optional=True)
+
+            if not no_galliumnine:
+                try_copy("/usr/lib64/d3d9-nine.dll.so",
+                        self.prefix_dir + "drive_c/windows/system32/d3d9.dll")
+                try_copy("/usr/lib/d3d9-nine.dll.so",
+                        self.prefix_dir + "drive_c/windows/syswow64/d3d9.dll")
 
             try_copy(g_proton.lib64_dir + "wine/vkd3d-proton/d3d12.dll",
                     self.prefix_dir + "drive_c/windows/system32/d3d12.dll")
@@ -1011,6 +1023,7 @@ class Session:
         self.check_environment("PROTON_NO_XIM", "noxim")
         self.check_environment("PROTON_HEAP_DELAY_FREE", "heapdelayfree")
         self.check_environment("PROTON_ENABLE_NVAPI", "enablenvapi")
+        self.check_environment("PROTON_NO_GALLIUM_NINE", "nogalliumnine")
 
         if "noesync" in self.compat_config:
             self.env.pop("WINEESYNC", "")
