@@ -164,7 +164,7 @@ else
 endif
 
 CROSSLDFLAGS   += -Wl,--file-alignment,4096
-OPTIMIZE_FLAGS := -O2 -march=nocona -mtune=core-avx2 -mfpmath=sse
+OPTIMIZE_FLAGS := -Ofast -march=native -mtune=native -pipe -fvect-cost-model=dynamic -malign-data=cacheline -falign-functions=64 -flimit-function-alignment -DNDEBUG
 SANITY_FLAGS   := -fwrapv -fno-strict-aliasing
 DEBUG_FLAGS    := -gdwarf-2 -gstrict-dwarf
 COMMON_FLAGS    = $(DEBUG_FLAGS) $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
