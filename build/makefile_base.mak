@@ -412,16 +412,16 @@ endif # ifeq ($(CONTAINER),)
 GST_COMMON_MESON_ARGS := \
 	-Dexamples=disabled \
 	-Dtests=disabled \
-	-Dgtk_doc=disabled \
-	-Dintrospection=disabled \
 	-Dgobject-cast-checks=disabled \
 	-Dglib-asserts=disabled \
 	-Dglib-checks=disabled \
-	-Dnls=disabled \
-	-Dbenchmarks=disabled
+	-Dnls=disabled
 
 GST_ORC_MESON_ARGS := \
 	-Dorc-test=disabled \
+	-Dgtk_doc=disabled \
+	-Dbenchmarks=disabled \
+	-Dintrospection=disabled \
 	$(GST_COMMON_MESON_ARGS)
 
 $(eval $(call rules-source,gst_orc,$(SRCDIR)/gst-orc))
@@ -438,6 +438,9 @@ GSTREAMER_MESON_ARGS := \
 	-Dbenchmarks=disabled \
 	-Dtools=disabled \
 	-Dbash-completion=disabled \
+	-Dgtk_doc=disabled \
+	-Dbenchmarks=disabled \
+	-Dintrospection=disabled \
 	$(GST_COMMON_MESON_ARGS)
 
 GSTREAMER_DEPENDS = gst_orc
@@ -452,7 +455,6 @@ $(eval $(call rules-meson,gstreamer,64))
 ##
 
 GST_BASE_MESON_ARGS := \
-	-Daddr=disabled \
 	-Dalsa=disabled \
 	-Daudiomixer=disabled \
 	-Daudiorate=disabled \
@@ -476,6 +478,7 @@ GST_BASE_MESON_ARGS := \
 	-Dxshm=disabled \
 	-Dxvideo=disabled \
 	-Dtools=disabled \
+	-Dintrospection=disabled \
 	$(GST_COMMON_MESON_ARGS)
 
 GST_BASE_DEPENDS = gst_orc gstreamer
@@ -536,7 +539,6 @@ GST_GOOD_MESON_ARGS := \
 	-Dwavenc=disabled \
 	-Dximagesrc=disabled \
 	-Dy4m=disabled \
-	-Dtools=disabled \
 	$(GST_COMMON_MESON_ARGS)
 
 GST_GOOD_DEPENDS = gst_orc gstreamer gst_base
